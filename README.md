@@ -1,7 +1,5 @@
 # biblioteca-commerce
 
-# biblioteca-commerce
-
 ## acceder mediante menus 1.0
 ### libro ( get )
 - libro_id: int 
