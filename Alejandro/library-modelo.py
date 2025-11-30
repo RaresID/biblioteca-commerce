@@ -1,7 +1,7 @@
 from sqlalchemy import Integer, String, Boolean, Float, ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
-from app.database import Base
+from database import Base
 
 class libro(Base):
     __tablename__ = "libros"
@@ -14,7 +14,7 @@ class libro(Base):
     disponible: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     #ID editora y genero son claves ajenas
     editora_id: Mapped[int] = mapped_column(Integer, ForeignKey("editores.editora_id"))
-    genero_id: Mapped[int] = mapped_column(Integer, ForeignKey("genero.genero_id"))
+    genero_id: Mapped[int] = mapped_column(Integer, ForeignKey("generos_literarios.genero_id"))
     descripcion: Mapped[str] = mapped_column(String(500), nullable=False)
 
     # Relaciones de la clase Libro
@@ -32,7 +32,7 @@ class editora(Base):
     origen: Mapped[str] = mapped_column(String(50), nullable=True)
     
     # Relación de muchos libros a una sola editora
-    lista_libros: Mapped[list["libro"]] = relationship(back_populates="editora")
+    lista_libros: Mapped[list["libro"]] = relationship(back_populates="editora_relacion")
 
 class genero(Base):
     __tablename__ = "generos_literarios"
@@ -42,7 +42,7 @@ class genero(Base):
     descripcion: Mapped[str] = mapped_column(String(150), nullable=False)
     
     # Relación muchos libros en un género
-    lista_libros: Mapped[list["libro"]] = relationship(back_populates="genero")
+    lista_libros: Mapped[list["libro"]] = relationship(back_populates="genero_relacion")
 
 # A continuación se establece la estructura para el usuario
 class usuario(Base):
@@ -64,6 +64,6 @@ class item_carr(Base):
     __tablename__ = "item_caritos"
     
     cantidad: Mapped[int] = mapped_column(Integer, nullable=False)
-    libro_id: Mapped[int] = mapped_column(Integer, ForeignKey("libros.id"))
-    carrito_id: Mapped[int] = mapped_column(Integer, ForeignKey("carritos.carrito_id"))
+    libro_id: Mapped[int] = mapped_column(Integer, ForeignKey("libros.id"), primary_key=True)
+    carrito_id: Mapped[int] = mapped_column(Integer, ForeignKey("carritos.carrito_id"), primary_key=True)
     
