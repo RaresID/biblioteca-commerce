@@ -1,0 +1,58 @@
+libro ( get )
+------------
+libro_id: int
+titulo: string
+genero_id: int
+numero_paginas: int
+autor: string
+disponible: boolean ( get )
+editora_id: string
+descripcion: string
+precio_compra: float
+precio_venta: float
+
+genero ( get )
+--------------
+genero_id: int
+nombre_genero: string
+lista_libros: list
+
+compra/venta [posible separacion de clases]
+--------------------------------------------
+C : compra ( post para el usuario ) D : venta ( delete para la BBDD )
+
+cliente_id: int
+precio_total: float
+libro_id: int
+descuento[opcional]: float ( en caso de existir saldo )
+
+editora
+--------
+editora_id:
+idioma : string
+origen(pais)[opcional]:
+lista_libros: list # si no hay filtro
+
+usuario
+--------
+usuario_id: int
+username: string
+email: string
+password_hash: string
+fecha_registro [opcional] : datetime
+
+si no hacemos pasarela de pago, el usuario debe tener un saldo propio
+----------------------------------------------------------------------
+saldo: float
+
+OPCIONAL ## acceder mediante filtro de busqueda a los libros [opcional]
+----------------------------------------------------------------------
+reseña ( por cada libro y podria estar en un filtro de busqueda )
+-----------------------------------------------------------------
+usuario_id: int
+libro_id: int
+contenido: string
+recomendado o no recomendado ( like ): boolean
+usuario puede vender libros a la propia empresa
+
+metodo de pago [opcional] ( pasarela de pago )
