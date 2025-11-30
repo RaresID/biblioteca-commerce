@@ -5,6 +5,7 @@ class LibroBase(BaseModel):
     price: int
     editor_id: int
     genre_id: int
+    avaible: bool
 
 
 class LibroCreate(LibroBase):
@@ -16,9 +17,24 @@ class LibroUpdate(BaseModel):
     price: int | None = None
     editor_id: int | None = None
     genre_id: int | None = None
+    avaible: bool | None = None
 
 
 class LibroRead(LibroBase):
     id: int
 
     model_config = ConfigDict(from_attributes=True)
+    
+class GenreBase(BaseModel):
+    name: str
+    
+class GenreCreate(GenreBase):
+    pass
+
+class GenreUpdate(BaseModel):
+    name: str | None = None
+
+class GenreRead(GenreBase):
+    id: int
+
+    model_config = ConfigDict(from_attributes=True)    
