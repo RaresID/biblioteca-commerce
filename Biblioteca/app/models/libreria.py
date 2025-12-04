@@ -13,16 +13,17 @@ class libro(Base):
     precio: Mapped[float] = mapped_column(Float, nullable=False) 
     disponible: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     #ID editora y genero son claves ajenas
-    editora_id: Mapped[int] = mapped_column(Integer, ForeignKey("editores.editora_id"))
+    #editora_id: Mapped[int] = mapped_column(Integer, ForeignKey("editores.editora_id"))
     genero_id: Mapped[int] = mapped_column(Integer, ForeignKey("generos_literarios.genero_id"))
     descripcion: Mapped[str] = mapped_column(String(500), nullable=False)
 
     # Relaciones de la clase Libro
     
     '''Primera relación: Una editora a varios libros'''
-    edit: Mapped["editora"] = relationship(back_populates="libros")
+    #edit: Mapped["editora"] = relationship(back_populates="libros")
     genre: Mapped["genero"] = relationship(back_populates="libros")
-    
+
+'''    
 class editora(Base):
     __tablename__ = "editores"
     
@@ -33,6 +34,7 @@ class editora(Base):
     
     # Relación de muchos libros a una sola editora
     lista_libros: Mapped[list["libro"]] = relationship(back_populates="editora_relacion")
+''' 
 
 class genero(Base):
     __tablename__ = "generos_literarios"
@@ -52,18 +54,20 @@ class usuario(Base):
     nombre_usuario: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str] = mapped_column(String(150), nullable=False)
     password: Mapped[str] = mapped_column(String(40), nullable=False)
-    fecha_creacion: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
-    
+
+
 class carrito(Base):
     __tablename__ = "carritos"
     
     carrito_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     fecha_creacion: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
-    
+
+''' 
 class item_carr(Base):
     __tablename__ = "item_caritos"
     
     cantidad: Mapped[int] = mapped_column(Integer, nullable=False)
     libro_id: Mapped[int] = mapped_column(Integer, ForeignKey("libros.id"), primary_key=True)
     carrito_id: Mapped[int] = mapped_column(Integer, ForeignKey("carritos.carrito_id"), primary_key=True)
+'''
     
