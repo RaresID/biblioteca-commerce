@@ -1,0 +1,16 @@
+Rutas principales para la entidad Libro
+- main
+- modelos
+- schemas
+- router
+- README
+
+Carpeta router está enfocada directamente
+para los endpoints
+
+/ (GET y POST): libros, usuarios, carrito, genero
+/x/{id_clave_primaria}: POST, PUT, DELETE
+
+Esto se aplica en las siguientes carpetas de router:
+- web
+- api
