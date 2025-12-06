@@ -9,4 +9,10 @@ class Carrito(Base):
     usuario_id: Mapped[int] = mapped_column(Integer, ForeignKey("usuarios.id"), primary_key=True)
     libro_id: Mapped[int] = mapped_column(Integer, ForeignKey("libros.id"), primary_key=True)
     
+    '''Relaciones de la tabla carritos
+    1. Cada item de carrito apunta a un usuario
+    2. Un item de carrito apunta a un libro
+    '''
     
+    usuario = relatioship("Usuario", back_populates="orden_pedidos")
+    libro = relationship("Libro", back_populates="orden_pedidos")
