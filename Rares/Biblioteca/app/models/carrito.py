@@ -14,5 +14,6 @@ class Carrito(Base):
     2. Un item de carrito apunta a un libro
     '''
     
-    usuario = relatioship("Usuario", back_populates="orden_pedidos")
+    usuario = relationship("Usuario", back_populates="orden_pedidos")
     libro = relationship("Libro", back_populates="orden_pedidos")
+
