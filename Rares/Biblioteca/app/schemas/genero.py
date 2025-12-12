@@ -19,8 +19,6 @@ class GenreValido(BaseModel):
             raise ValueError("El nombre del género no debe estar vacío.")
         return nombre_decidido
 
-
-    
 class GenreCreate(GenreBase,GenreValido):
     pass
 
