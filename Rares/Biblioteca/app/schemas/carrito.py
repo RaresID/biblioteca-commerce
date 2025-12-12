@@ -1,4 +1,6 @@
 from pydantic import BaseModel, ConfigDict, field_validator
+from usuario import UsuarioResponse
+from libro import LibroRead
 
 class CarritoResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -19,7 +21,7 @@ class CarritoFull(BaseModel):
     
     id:int
     usuario: UsuarioResponse
-    libro: Libroresponse
+    libro: LibroRead
 
 class CarritoCreate(BaseModel):
     model_config = ConfigDict(from_attributes=True)
