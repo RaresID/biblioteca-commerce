@@ -1,5 +1,5 @@
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String, Float, ForeignKey, Boolean
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Integer, String, Float, ForeignKey
 from app.database import Base
 
 
@@ -11,5 +11,13 @@ class Libro(Base):
     price: Mapped[float] = mapped_column(Float, nullable=False)
     description: Mapped[str] = mapped_column(String(200), nullable=False)
     genre_id: Mapped[int] = mapped_column(Integer, ForeignKey("genre.id"), nullable=False)
-    editor_id: Mapped[int] = mapped_column(Integer, ForeignKey("editorial.id"), nullable=False)
-    avaible: Mapped[bool] = mapped_column(Boolean, default= True, nullable=False)
+    
+    genero = relationship(
+        "Genre",
+        back_populates="libros"
+    )
+    
+    orden_pedidos = relationship(
+        "Carrito",
+        back_populates="libro"
+    )
