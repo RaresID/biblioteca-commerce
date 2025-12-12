@@ -1,5 +1,4 @@
 from pydantic import BaseModel, ConfigDict, field_validator
-from typing import Optional
 
 model_config = ConfigDict(from_attributes=True)
 
