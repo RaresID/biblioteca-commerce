@@ -16,4 +16,3 @@ class Carrito(Base):
     
     usuario = relationship("Usuario", back_populates="orden_pedidos")
     libro = relationship("Libro", back_populates="orden_pedidos")
-
