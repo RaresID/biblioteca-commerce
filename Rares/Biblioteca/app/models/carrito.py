@@ -6,8 +6,8 @@ class Carrito(Base):
     __tablename__ = "carritos"
     
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    usuario_id: Mapped[int] = mapped_column(Integer, ForeignKey("usuarios.id"), primary_key=True)
-    libro_id: Mapped[int] = mapped_column(Integer, ForeignKey("libros.id"), primary_key=True)
+    usuario_id: Mapped[int] = mapped_column(Integer, ForeignKey("usuarios.id"))
+    libro_id: Mapped[int] = mapped_column(Integer, ForeignKey("libro.id"))
     
     '''Relaciones de la tabla carritos
     1. Cada item de carrito apunta a un usuario
