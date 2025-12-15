@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict, field_validator
 from typing import Optional
 
-from genero import GenreRead
+from app.schemas.genero import GenreRead
 
 model_config = ConfigDict(from_attributes=True)
 
@@ -18,6 +18,9 @@ class LibroBase(BaseModel):
 
 class LibroValido(BaseModel):
     model_config = model_config
+    
+    title: Optional[str] = None
+    price: Optional[float] = None
     
     @field_validator("title")
     @classmethod
