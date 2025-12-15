@@ -1,13 +1,23 @@
-from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Integer, String, Float, ForeignKey
 from app.database import Base
 
-class Usuario(Base):
-    __tablename__ = "usuarios"
-    
+
+class Libro(Base):
+    __tablename__ = "libro"
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    email: Mapped[str] = mapped_column(String(150), nullable=False)
-    password: Mapped[str] = mapped_column(String(40), nullable=False)
+    title: Mapped[str] = mapped_column(String(50), nullable=False)
+    price: Mapped[float] = mapped_column(Float, nullable=False)
+    description: Mapped[str] = mapped_column(String(200), nullable=False)
+    genre_id: Mapped[int] = mapped_column(Integer, ForeignKey("genre.id"), nullable=False)
     
-    # Relación un usuario tiene varios pedidos en el carro
-    orden_pedidos = relationship("Carrito", back_populates="usuario")
+    genero = relationship(
+        "Genre",
+        back_populates="libros"
+    )
+    
+    orden_pedidos = relationship(
+        "Carrito",
+        back_populates="libro"
+    )
