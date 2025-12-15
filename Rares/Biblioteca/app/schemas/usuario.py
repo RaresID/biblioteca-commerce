@@ -9,6 +9,9 @@ establecer los validadores para email y la contraseña.'''
 class UsuarioValido(BaseModel):
     model_config = model_config
     
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    
     @field_validator("email")
     @classmethod
     def validar_email(cls, x: EmailStr | None) -> EmailStr | None:
@@ -27,7 +30,7 @@ class UsuarioValido(BaseModel):
             return None
         
         if len(y) < 8:
-            raise ValueError("La contraseña debe tener como mínio 8 caracteres.")
+            raise ValueError("La contraseña debe tener como mínimo 8 caracteres.")
         
         return y
 
@@ -47,5 +50,4 @@ class UsuarioUpdate(UsuarioCreate):
     pass
 
 class UsuarioPatch(UsuarioValido):
-    email: Optional[EmailStr] = None
-    password: Optional[str] = None
+    pass
