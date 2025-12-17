@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Libros - LIBRERIA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { padding-top: 100px; }
+        @media (max-width: 576px) { body { padding-top: 140px; } }
+        .cell { padding: 12px; border: 1px solid rgba(0,0,0,0.06); }
+        .header-row { font-weight: 600; }
+        .actions .btn { min-width: 56px; }
+        .create-form .form-control { max-width: 100%; }
+        .pastel-0 { background:#FDE2E2 }
+        .pastel-1 { background:#E8F8F5 }
+        .pastel-2 { background:#FFF6E5 }
+        .pastel-3 { background:#EAE9FF }
+        .pastel-4 { background:#F0F7E8 }
+        /* responsive: apilar celdas en pantallas estrechas */
+        @media (max-width: 767px) {
+            .row.align-items-center { display: block !important; margin-bottom: 12px; }
+            .row.align-items-center .cell { display: block; width: 100%; }
+            .row.header-row { display: none; }
+            .actions { display: flex; gap: .5rem; justify-content: flex-start; }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="bg-light py-3 fixed-top shadow-sm">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="h4 mb-0">LIBRERIA</h1>
+            <div class="text-end">
+                <div class="mb-2"><a href="/admin" class="admin-card text-decoration-none text-dark">ADMIN</a></div>
+                <a href="/carrito" class="btn btn-primary"><i class="bi bi-cart-fill"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container my-4">
+        <h2 class="mb-3">Gestión de Libros</h2>
+
+        <!-- Tabla estilo excel con colores pastel alternos por celda -->
+        <div class="mb-3">
+            <div class="d-none d-md-block">
+                <div class="row header-row">
+                    {% set colors = ['pastel-0','pastel-1','pastel-2','pastel-3','pastel-4'] %}
+                    <div class="col-1 cell {{ colors[0] }}">ID</div>
+                    <div class="col-3 cell {{ colors[1] }}">TITULO</div>
+                    <div class="col-1 cell {{ colors[2] }}">PRECIO</div>
+                    <div class="col-3 cell {{ colors[3] }}">DESCRIPCION</div>
+                    <div class="col-2 cell {{ colors[4] }}">GENERO</div>
+                    <div class="col-2 cell">ACCIONES</div>
+                </div>
+            </div>
+
+            {% if books and books|length > 0 %}
+                {% for book in books %}
+                    <div class="row align-items-center">
+                        <div class="col-1 cell {{ colors[0] }}">{{ book.id }}</div>
+                        <div class="col-3 cell {{ colors[1] }}">{{ book.title }}</div>
+                        <div class="col-1 cell {{ colors[2] }}">€{{ '%.2f'|format(book.price) }}</div>
+                        <div class="col-3 cell {{ colors[3] }}">{{ book.description }}</div>
+                        <div class="col-2 cell {{ colors[4] }}">{{ book.genero.name if book.genero else '—' }}</div>
+                        <div class="col-2 cell actions d-flex gap-2">
+                            <div class="text-center">
+                                <div class="small">BORRAR</div>
+                                <form method="post" action="/libros/delete/{{ book.id }}" onsubmit="return confirm('¿Borrar libro {{ book.title }}?');">
+                                    <button class="btn btn-outline-danger btn-sm" title="Borrar"><i class="bi bi-dash-lg"></i></button>
+                                </form>
+                            </div>
+                            <div class="text-center">
+                                <div class="small">EDITAR</div>
+                                <a href="/libros/edit/{{ book.id }}" class="btn btn-outline-secondary btn-sm">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No hay libros en la base de datos.</p>
+            {% endif %}
+        </div>
+
+        <!-- Crear libro -->
+        <div class="mt-4 p-3 border rounded create-form">
+            <h3 class="mb-3">Crear libro</h3>
+            <form method="post" action="/libros/create">
+                <div class="row g-2 align-items-end">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Título</label>
+                        <input name="title" class="form-control" required>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label class="form-label">Precio</label>
+                        <input name="price" type="number" step="0.01" class="form-control" required>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="form-label">Género</label>
+                        <input list="genres_list" name="genre_name" class="form-control" placeholder="Escribe o elige un género" required>
+                        <datalist id="genres_list">
+                            {% for g in genres %}
+                                <option value="{{ g.name }}"></option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="col-12 col-md-9">
+                        <label class="form-label">Descripción</label>
+                        <input name="description" class="form-control" required>
+                    </div>
+                    <div class="col-12 col-md-3 text-end">
+                        <button class="btn btn-success mt-2">Crear libro</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
