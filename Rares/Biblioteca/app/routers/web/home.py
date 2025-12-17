@@ -12,6 +12,8 @@ from typing import Optional
 from app.database import get_db
 from app.models.libro import Libro
 from app.models.genero import Genre
+from app.models.carrito import Carrito
+from app.models.usuario import Usuario
 
 # configurar jinja2
 # usar la carpeta de plantillas (no el archivo) y ruta relativa al paquete
@@ -31,10 +33,59 @@ def home(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/carrito", response_class=HTMLResponse)
-def carrito(request: Request):
+def carrito(request: Request, db: Session = Depends(get_db)):
+    # obtener items del carrito y transformar a estructuras simples para evitar cargas perezosas
+    items = db.query(Carrito).all()
+    items_data = []
+    for it in items:
+        libro = it.libro
+        items_data.append({
+            "id": it.id,
+            "libro_id": libro.id if libro else None,
+            "title": libro.title if libro else "(desconocido)",
+            "price": float(libro.price) if libro and libro.price is not None else 0.0
+        })
     return templates.TemplateResponse(
         "carrito.html",
-        {"request": request}
+        {"request": request, "items": items_data}
+    )
+
+
+@router.post("/carrito/add/{book_id}")
+def carrito_add(book_id: int, db: Session = Depends(get_db)):
+    # usar primer usuario por defecto (no hay autenticación en esta app)
+    user = db.query(Usuario).first()
+    if not user:
+        return RedirectResponse(url="/", status_code=303)
+    # confirmar que el libro existe
+    libro = db.query(Libro).filter(Libro.id == book_id).first()
+    if not libro:
+        return RedirectResponse(url="/", status_code=303)
+    # crear item de carrito
+    item = Carrito(usuario_id=user.id, libro_id=book_id)
+    db.add(item)
+    db.commit()
+    return RedirectResponse(url="/carrito", status_code=303)
+
+
+@router.post("/carrito/delete/{item_id}")
+def carrito_delete(item_id: int, db: Session = Depends(get_db)):
+    it = db.query(Carrito).filter(Carrito.id == item_id).first()
+    if it:
+        db.delete(it)
+        db.commit()
+    return RedirectResponse(url="/carrito", status_code=303)
+
+
+@router.post("/carrito/checkout")
+def carrito_checkout(request: Request, db: Session = Depends(get_db)):
+    # eliminar todos los items del carrito (compra completa)
+    db.query(Carrito).delete()
+    db.commit()
+    # renderizar carrito con mensaje de compra realizada
+    return templates.TemplateResponse(
+        "carrito.html",
+        {"request": request, "items": [], "bought": True}
     )
 
 
@@ -144,8 +195,51 @@ def editar_libro_post(request: Request,
 
 
 @router.get("/generos", response_class=HTMLResponse)
-def admin_generos(request: Request):
+def admin_generos(request: Request, db: Session = Depends(get_db)):
+    # listar géneros
+    generos = db.query(Genre).all()
     return templates.TemplateResponse(
         "generos.html",
-        {"request": request}
+        {"request": request, "genres": generos}
     )
+
+
+@router.post("/generos/create")
+def crear_genero(request: Request, name: str = Form(...), db: Session = Depends(get_db)):
+    nombre = name.strip()
+    if not nombre:
+        return RedirectResponse(url="/generos", status_code=303)
+    existing = db.query(Genre).filter(Genre.name == nombre).first()
+    if existing:
+        return RedirectResponse(url="/generos", status_code=303)
+    g = Genre(name=nombre)
+    db.add(g)
+    db.commit()
+    return RedirectResponse(url="/generos", status_code=303)
+
+
+@router.post("/generos/delete/{genre_id}")
+def borrar_genero(genre_id: int, db: Session = Depends(get_db)):
+    g = db.query(Genre).filter(Genre.id == genre_id).first()
+    if g:
+        db.delete(g)
+        db.commit()
+    return RedirectResponse(url="/generos", status_code=303)
+
+
+@router.get("/generos/edit/{genre_id}", response_class=HTMLResponse)
+def editar_genero_get(request: Request, genre_id: int, db: Session = Depends(get_db)):
+    g = db.query(Genre).filter(Genre.id == genre_id).first()
+    return templates.TemplateResponse("generos_edit.html", {"request": request, "genre": g})
+
+
+@router.post("/generos/edit/{genre_id}")
+def editar_genero_post(request: Request, genre_id: int, name: str = Form(...), db: Session = Depends(get_db)):
+    g = db.query(Genre).filter(Genre.id == genre_id).first()
+    if g:
+        newname = name.strip()
+        if newname:
+            g.name = newname
+            db.add(g)
+            db.commit()
+    return RedirectResponse(url="/generos", status_code=303)

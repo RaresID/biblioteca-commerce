@@ -13,11 +13,10 @@
         @media (max-width: 576px) { body { padding-top: 140px; } }
     </style>
 </head>
-</head>
 <body>
     <header class="bg-light py-3 fixed-top shadow-sm">
         <div class="container d-flex justify-content-between align-items-center">
-            <h1 class="h4 mb-0">LIBRERIA</h1>
+            <h1 class="h4 mb-0"><a href="/" class="text-decoration-none text-dark">LIBRERIA</a></h1>
             <div class="text-end">
                 <div class="mb-2"><a href="/admin" class="admin-card text-decoration-none text-dark">ADMIN</a></div>
                 <a href="/carrito" class="btn btn-primary"><i class="bi bi-cart-fill"></i></a>
@@ -26,9 +25,45 @@
     </header>
 
     <main class="container my-4">
-        <h2>Carrito</h2>
-        <p>Aquí se mostrarán los artículos del carrito (pendiente de implementar).</p>
+        <h2 class="mb-3">Carrito</h2>
+
+        {% if items and items|length > 0 %}
+            <div class="mb-3 d-flex justify-content-end">
+                <form method="post" action="/carrito/checkout" onsubmit="return confirm('¿Confirmar compra de todos los artículos?');">
+                    <button class="btn btn-success">Comprar todo</button>
+                </form>
+            </div>
+
+            <div class="row">
+                <div class="col-12" id="cart-list">
+                    <div class="row header-row fw-semibold d-none d-md-flex">
+                        <div class="col-1">ID</div>
+                        <div class="col-6">TÍTULO</div>
+                        <div class="col-2">PRECIO</div>
+                        <div class="col-3 text-end">ACCIONES</div>
+                    </div>
+                    {% for it in items %}
+                        <div class="row align-items-center py-2 border-top">
+                            <div class="col-1">{{ it.id }}</div>
+                            <div class="col-6">{{ it.title }}</div>
+                            <div class="col-2">€{{ '%.2f'|format(it.price) }}</div>
+                            <div class="col-3 text-end">
+                                <form method="post" action="/carrito/delete/{{ it.id }}" onsubmit="return confirm('¿Quitar este artículo?');" class="d-inline">
+                                    <button class="btn btn-sm btn-outline-danger">Quitar</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <p>Tu carrito está vacío.</p>
+        {% endif %}
     </main>
+
+        {% if bought %}
+            <div class="alert alert-success mt-3">compra realizada !</div>
+        {% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
