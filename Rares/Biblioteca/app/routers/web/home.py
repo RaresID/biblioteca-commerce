@@ -5,7 +5,7 @@ Renderiza un HTML
 
 from fastapi.templating import Jinja2Templates
 from fastapi import APIRouter, Request, Depends, Form
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session
 from typing import Optional
 
@@ -26,9 +26,11 @@ router = APIRouter(tags=["web"])
 def home(request: Request, db: Session = Depends(get_db)):
     # obtener lista de libros desde la BBDD
     libros = db.query(Libro).all()
+    # contar items del carrito para mostrar en el header
+    cart_count = db.query(Carrito).count()
     return templates.TemplateResponse(
         "home.html",
-        {"request": request, "books": libros}
+        {"request": request, "books": libros, "cart_count": cart_count}
     )
 
 
@@ -52,7 +54,7 @@ def carrito(request: Request, db: Session = Depends(get_db)):
 
 
 @router.post("/carrito/add/{book_id}")
-def carrito_add(book_id: int, db: Session = Depends(get_db)):
+def carrito_add(request: Request, book_id: int, db: Session = Depends(get_db)):
     # usar primer usuario por defecto (no hay autenticación en esta app)
     user = db.query(Usuario).first()
     if not user:
@@ -65,6 +67,10 @@ def carrito_add(book_id: int, db: Session = Depends(get_db)):
     item = Carrito(usuario_id=user.id, libro_id=book_id)
     db.add(item)
     db.commit()
+    # si la petición viene por AJAX, devolver JSON con el nuevo contador
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        count = db.query(Carrito).count()
+        return JSONResponse({"count": count})
     return RedirectResponse(url="/carrito", status_code=303)
 
 
