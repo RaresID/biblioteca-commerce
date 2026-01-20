@@ -65,22 +65,28 @@ def init_db():
         g5 = Genre(name="Aventura")      
         g6 = Genre(name="Supervivencia") 
         g7 = Genre(name="Biografia")
+        g8 = Genre(name="Historia")
         
         # agregar las canciones
-        default_genres = [g1, g2, g3, g4, g5, g6, g7]
+        default_genres = [g1, g2, g3, g4, g5, g6, g7,g8]
         db.add_all(default_genres)
         
         # El commit es obligatorio para que obtengan su id.
         db.commit()
         
         # Inserción de Libros
-        b1 = Libro(title="Napoleon", price=10.0, description="vacia1", genre_id=g7.id) # Biografia
-        b2 = Libro(title="Misery", price=14.0, description="vacia2", genre_id=g1.id) # Terror
-        b3 = Libro(title="La Boda de mi mejor amiga", price=19.99, description="vacia3", genre_id=g2.id) # Comedia
-        b4 = Libro(title="guia de supervivencia", price=29.33, description="vacia4", genre_id=g6.id) # Supervivencia
-        b5 = Libro(title="karate kid, el libro", price=29.33, description="vacia5", genre_id=g4.id) # Karate
+        # Inserción de 9 Libros
+        b1 = Libro(title="Napoleon", price=15.50, description="Vida y batallas del emperador.", genre_id=g7.id)
+        b2 = Libro(title="El Resplandor", price=18.00, description="Pánico en el hotel Overlook.", genre_id=g1.id)
+        b3 = Libro(title="La Isla del Tesoro", price=12.99, description="Piratas, mapas y tesoros escondidos.", genre_id=g5.id)
+        b4 = Libro(title="Sapiens", price=22.40, description="Breve historia de la humanidad.", genre_id=g8.id)
+        b5 = Libro(title="Don Quijote", price=25.00, description="El ingenioso hidalgo de la Mancha.", genre_id=g5.id)
+        b6 = Libro(title="Robinson Crusoe", price=14.20, description="Naufragio y supervivencia en una isla.", genre_id=g6.id)
+        b7 = Libro(title="Steve Jobs", price=19.95, description="La biografía oficial del genio de Apple.", genre_id=g7.id)
+        b8 = Libro(title="Dracula", price=11.00, description="El clásico vampiro de Bram Stoker.", genre_id=g1.id)
+        b9 = Libro(title="El Lazarillo de Tormes", price=10.50, description="Las andanzas de un joven pícaro.", genre_id=g5.id)
         
-        default_libros = [b1, b2, b3, b4, b5]
+        default_libros = [b1, b2, b3, b4, b5, b6, b7, b8, b9]
         db.add_all(default_libros)
         
         '''Inserciones únicas tanto usuario
