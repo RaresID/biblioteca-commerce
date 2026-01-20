@@ -119,7 +119,13 @@
                         if (datos.items && datos.items[0].volumeInfo.imageLinks) {
                             let cubiertaUrl = datos.items[0].volumeInfo.imageLinks.thumbnail;
                             cubiertaUrl = cubiertaUrl.replace('http://', 'https://');
-                                                     
+                            
+                            if (cubiertaUrl.includes('&zoom=1')) {
+                                cubiertaUrl = cubiertaUrl.replace('&zoom=1', '&zoom=2');
+                            } else {
+                                cubiertaUrl += '&zoom=2';
+                            }
+
                             img.src = cubiertaUrl;
                         }
                     })
