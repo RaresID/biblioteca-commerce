@@ -81,8 +81,8 @@ def init_db():
         b3 = Libro(title="La Isla del Tesoro", price=12.99, description="Piratas, mapas y tesoros escondidos.", genre_id=g5.id)
         b4 = Libro(title="Sapiens", price=22.40, description="Breve historia de la humanidad.", genre_id=g8.id)
         b5 = Libro(title="Don Quijote", price=25.00, description="El ingenioso hidalgo de la Mancha.", genre_id=g5.id)
-        b6 = Libro(title="Robinson Crusoe", price=14.20, description="Naufragio y supervivencia en una isla.", genre_id=g6.id)
-        b7 = Libro(title="Steve Jobs", price=19.95, description="La biografía oficial del genio de Apple.", genre_id=g7.id)
+        b6 = Libro(title="Robinson Crusoe", price=14.20, description="Supervivencia en una isla.", genre_id=g6.id)
+        b7 = Libro(title="Steve Jobs", price=19.95, description="Biografía del fundador de Apple.", genre_id=g7.id)
         b8 = Libro(title="Dracula", price=11.00, description="El clásico vampiro de Bram Stoker.", genre_id=g1.id)
         b9 = Libro(title="El Lazarillo de Tormes", price=10.50, description="Las andanzas de un joven pícaro.", genre_id=g5.id)
         
