@@ -26,11 +26,13 @@ router = APIRouter(tags=["web"])
 def home(request: Request, db: Session = Depends(get_db)):
     # obtener lista de libros desde la BBDD
     libros = db.query(Libro).all()
+    # obtener los últimos 3 libros agregados para el slider
+    libros_recientes = db.query(Libro).order_by(Libro.id.desc()).limit(3).all()
     # contar items del carrito para mostrar en el header
     cart_count = db.query(Carrito).count()
     return templates.TemplateResponse(
         "home.html",
-        {"request": request, "books": libros, "cart_count": cart_count}
+        {"request": request, "books": libros, "recent_books": libros_recientes, "cart_count": cart_count}
     )
 
 
